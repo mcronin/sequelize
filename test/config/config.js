@@ -64,5 +64,23 @@ module.exports = {
       maxConnections: process.env.SEQ_MYSQL_POOL_MAX  || process.env.SEQ_POOL_MAX  || 5,
       maxIdleTime:    process.env.SEQ_MYSQL_POOL_IDLE || process.env.SEQ_POOL_IDLE || 3000
     }
+  },
+  
+  universe: {
+	database: process.env.SEQ_MYSQL_DB   || process.env.SEQ_DB   || 'circus',
+	username: process.env.SEQ_MYSQL_USER || process.env.SEQ_USER || 'ASCORP\\croninmi',
+	password: process.env.SEQ_MYSQL_PW   || process.env.SEQ_PW   || 'Welcome#4',
+	host:     process.env.SEQ_MYSQL_HOST || process.env.SEQ_HOST || '127.0.0.1',
+	port:     process.env.SEQ_MYSQL_PORT || process.env.SEQ_PORT || 31438,
+	pool:     {
+	  maxConnections: process.env.SEQ_MYSQL_POOL_MAX  || process.env.SEQ_POOL_MAX  || 10,
+	  maxIdleTime:    process.env.SEQ_MYSQL_POOL_IDLE || process.env.SEQ_POOL_IDLE || 3000	  
+    }
   }
 };
+
+
+
+
+
+

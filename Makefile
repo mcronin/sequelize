@@ -1,6 +1,6 @@
 REPORTER ?= spec
 TESTS = $(shell find ./test/integration/* -name "*.test.js")
-DIALECT ?= mysql
+DIALECT ?= universe
 
 # test commands
 
@@ -15,11 +15,11 @@ ifeq (true,$(COVERAGE))
 test: codeclimate
 else
 test:
-	make jshint && make teaser && make test-unit && make test-integration
+	make teaser && make test-unit && make test-integration
 	@if [ "$$GREP" ]; then \
-		make jshint && make teaser && ./node_modules/mocha/bin/mocha --globals setImmediate,clearImmediate --ui tdd --check-leaks --colors -t 10000 --reporter $(REPORTER) -g "$$GREP" $(TESTS); \
+		make teaser && ./node_modules/mocha/bin/mocha --globals setImmediate,clearImmediate --ui tdd --check-leaks --colors -t 10000 --reporter $(REPORTER) -g "$$GREP" $(TESTS); \
 	else \
-		make jshint && make teaser && ./node_modules/mocha/bin/mocha --globals setImmediate,clearImmediate --ui tdd --check-leaks --colors -t 10000 --reporter $(REPORTER) $(TESTS); \
+		make teaser && ./node_modules/mocha/bin/mocha --globals setImmediate,clearImmediate --ui tdd --check-leaks --colors -t 10000 --reporter $(REPORTER) $(TESTS); \
 	fi
 endif
 
@@ -27,7 +27,7 @@ endif
 test-unit:
 	./node_modules/mocha/bin/mocha --globals setImmediate,clearImmediate --ui tdd --check-leaks --colors -t 10000 --reporter $(REPORTER) ./test/unit/*.js ./test/unit/**/*.js
 
-test-unit-all: test-unit-sqlite test-unit-mysql test-unit-postgres test-unit-postgres-native test-unit-mariadb test-unit-mssql
+test-unit-all: test-unit-sqlite test-unit-mysql test-unit-postgres test-unit-postgres-native test-unit-mariadb test-unit-mssql test-unit-universe
 
 test-unit-mariadb:
 	@DIALECT=mariadb make test-unit
@@ -41,6 +41,8 @@ test-unit-postgres:
 	@DIALECT=postgres make test-unit
 test-unit-postgres-native:
 	@DIALECT=postgres-native make test-unit
+test-unit-universe:
+	@DIALECT=universe make test-unit
 
 # Integration tests
 test-integration:
@@ -50,7 +52,7 @@ test-integration:
 		./node_modules/mocha/bin/mocha --globals setImmediate,clearImmediate --ui tdd --check-leaks --colors -t 10000 --reporter $(REPORTER) $(TESTS); \
 	fi
 
-test-integration-all: test-integration-sqlite test-integration-mysql test-integration-postgres test-integration-postgres-native test-integration-mariadb test-integration-mssql
+test-integration-all: test-integration-sqlite test-integration-mysql test-integration-postgres test-integration-postgres-native test-integration-mariadb test-integration-mssql test-integration-universe
 
 test-integration-mariadb:
 	@DIALECT=mariadb make test-integration
@@ -64,10 +66,8 @@ test-integration-postgres:
 	@DIALECT=postgres make test-integration
 test-integration-postgres-native:
 	@DIALECT=postgres-native make test-integration
-
-
-jshint:
-	./node_modules/.bin/jshint lib test
+test-integration-universe:
+	@DIALECT=universe make test-integration
 
 mariadb:
 	@DIALECT=mariadb make test
@@ -81,6 +81,8 @@ postgres:
 	@DIALECT=postgres make test
 postgres-native:
 	@DIALECT=postgres-native make test
+universe:
+	@DIALECT=universe make test
 
 # Coverage
 cover:
@@ -107,6 +109,10 @@ postgres-native-cover:
 	rm -rf coverage
 	@DIALECT=postgres-native make cover
 	mv coverage coverage-postgresnative
+universe-cover:
+	rm -rf coverage
+	@DIALECT=universe make cover
+	mv coverage coverage-universe
 
 merge-coverage:
 	rm -rf coverage
@@ -127,10 +133,10 @@ postgresn: postgres-native
 
 # test all the dialects \o/
 
-all: sqlite mysql postgres postgres-native mariadb
+all: sqlite mysql postgres postgres-native mariadb universe
 
-all-cover: sqlite-cover mysql-cover postgres-cover postgres-native-cover mariadb-cover merge-coverage
-coveralls: sqlite-cover mysql-cover postgres-cover postgres-native-cover mariadb-cover merge-coverage coveralls-send
-codeclimate: sqlite-cover mysql-cover postgres-cover postgres-native-cover mariadb-cover merge-coverage codeclimate-send
+all-cover: sqlite-cover mysql-cover postgres-cover postgres-native-cover mariadb-cover universe-cover merge-coverage
+coveralls: sqlite-cover mysql-cover postgres-cover postgres-native-cover mariadb-cover universe-cover merge-coverage coveralls-send
+codeclimate: sqlite-cover mysql-cover postgres-cover postgres-native-cover mariadb-cover universe-cover merge-coverage codeclimate-send
 
 .PHONY: sqlite mysql postgres pgsql postgres-native postgresn all test
