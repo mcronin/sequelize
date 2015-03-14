@@ -73,8 +73,8 @@ module.exports = {
   	host:     process.env.SEQ_UV_HOST    || process.env.SEQ_HOST || '127.0.0.1',
     port:     process.env.SEQ_UV_PORT    || process.env.SEQ_PORT || 31438,
   	pool:     {
-  	  maxConnections: process.env.SEQ_MYSQL_POOL_MAX  || process.env.SEQ_POOL_MAX  || 10,
-  	  maxIdleTime:    process.env.SEQ_MYSQL_POOL_IDLE || process.env.SEQ_POOL_IDLE || 3000	  
+  	  maxConnections: process.env.SEQ_UV_POOL_MAX  || process.env.SEQ_POOL_MAX  || 10,
+  	  maxIdleTime:    process.env.SEQ_UV_POOL_IDLE || process.env.SEQ_POOL_IDLE || 3000	  
       },
   	dialectOptions: {
   	  libpath:  process.env.SEQ_UV_LIBPATH || 'C:/ARCHITECT/UniDK/jdbc/lib/unijdbc.jar',
